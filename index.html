@@ -50,10 +50,22 @@
 
     const Winner = (props) => {
         return (
-            <div className="winner" style={{display:props.winner?"flex":"none"}}>You Won</div>
+            <div className="winner" style={{display:props.winner?"flex":"none"}}>
+                <span>You Won</span>
+                <br />
+                <RestartButton restartGame={props.restartGame}/>
+            </div>
         );
     };
 
+    const RestartButton = (props) => {
+        return (
+            <button onClick={props.restartGame}>
+                Restart
+            </button>
+
+        );
+    };
 
 
     class Game extends React.Component {
@@ -84,11 +96,15 @@
             });
         };
 
+        restartGame = () => {
+            this.setState({clickedColor:null, solvedColors:[], selectedTiles:[], winner:false});
+        };
+
         render() {
             return (
                 <div>
                     <Field clickTile={this.clickTile} selectedTiles={this.state.selectedTiles} solvedColors={this.state.solvedColors}/>
-                    <Winner winner={this.state.winner}/>
+                    <Winner winner={this.state.winner} restartGame={this.restartGame}/>
                 </div>
             )
         }
