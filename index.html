@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="memory.css">
+
+
+    <title>Memory</title>
+</head>
+<body>
+
+<div id="container">
+</div>
+
+<script type="text/babel">
+
+    const Tile = (props) => {
+        return (
+            <div className="tile" style={{backgroundColor: props.color, gridColumn: props.col, gridRow: props.row, border: props.selected? "1px solid black":"none"}}
+                 onClick={()=>{props.clickTile(props.color, props.index)}}>
+            </div>
+        );
+    };
+
+    const Field = (props) => {
+        const tiles = [];
+        const generateColor = () => {
+            return "#" + Math.floor(Math.random() * 1048575 + 1).toString(16);
+        };
+        const colors = ["red","green","yellow","black","white","orange"];
+        let row = 1;
+        for (let i = 0;i<12;i++) {
+            // const color=generateColor();
+            const col=(i%2)+1;
+            if(i%2===0) row++;
+            const color = colors[i%6];
+            const selected = props.selectedTiles.indexOf(i) >-1 || props.solvedColors.indexOf(color) > -1;
+            tiles.push(<Tile key={i} color={color} row={row} col={col} clickTile={props.clickTile} index={i} selected={selected}/>);
+        }
+        return (
+            <div className="field">{tiles}</div>
+
+        );
+    };
+
+    const Winner = (props) => {
+        return (
+            <div className="winner" style={{display:props.winner?"flex":"none"}}>You Won</div>
+        );
+    };
+
+
+
+    class Game extends React.Component {
+        state ={ clickedColor:null, solvedColors:[], selectedTiles:[], winner:false};
+
+        clickTile = (color, tile) => {
+            this.setState((prevState)=> {
+                if (prevState.clickedColor === color) {
+                    let winner=prevState.solvedColors.length === 5;
+                    return {
+                        solvedColors: [...prevState.solvedColors, color],
+                        clickedColor: null,
+                        selectedTiles: [],
+                        winner: winner
+                    };
+                }
+                if (prevState.clickedColor === null) {
+                    return {
+                        clickedColor: color,
+                        selectedTiles: [...prevState.selectedTiles, tile]
+                    };
+                } else {
+                    return {
+                        clickedColor: null,
+                        selectedTiles: []
+                    }
+                }
+            });
+        };
+
+        render() {
+            return (
+                <div>
+                    <Field clickTile={this.clickTile} selectedTiles={this.state.selectedTiles} solvedColors={this.state.solvedColors}/>
+                    <Winner winner={this.state.winner}/>
+                </div>
+            )
+        }
+    }
+
+
+
+
+
+    ReactDOM.render(<Game />, container);
+</script>
+
+
+</body>
+</html>

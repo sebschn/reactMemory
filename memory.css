@@ -1,0 +1,19 @@
+.tile{
+}
+.field{
+  background-color: #bfbfbf;
+  display: grid;
+  width: 800px;
+  height: 800px;
+}
+.winner{
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 800px;
+  height: 800px;
+  background-color: #FFF;
+  opacity: 0.9;
+  align-items: center;
+  justify-content: center;
+}
